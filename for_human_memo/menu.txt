@@ -1,0 +1,18 @@
+PORTALというサイトで、メニュー画面を作成して。
+htmlのみで作成して欲しい。
+このメニューページは、
+http://HOST/mobile/m.html
+でアクセスさせる予定。
+
+表示するのは、スマホ
+
+images下にアイコンの画像を置いた。
+
+サイト全体を表す画像が、PORTAL.jpg
+
+KNOWHOW.jpg  knowhow/下へ遷移
+GOODS.jpg goods/下へ遷移
+MONEY.jpg cashe/下へ遷移
+SCHEDULE.jpg schedule/下へ遷移
+
+アイコン画像の背景色をページ全体の背景色にして、おしゃれなメニューページにしてほしい。
