@@ -13,9 +13,10 @@
       --icon-border: #5c3d2e;
       --icon-border-soft: #7a5542;
       --ink: #2f2118;
-      --ink-soft: rgba(47, 33, 24, 0.55);
       --safe-top: env(safe-area-inset-top, 0px);
       --safe-bottom: env(safe-area-inset-bottom, 0px);
+      /* 五角形ブロックの中心(50vh)から最上段アイコン中心までのおおよその距離 */
+      --top-icon-rise: min(46vw, 21dvh, 172px);
     }
 
     * {
@@ -23,18 +24,23 @@
     }
 
     html {
-      min-height: 100%;
+      height: 100%;
+      overflow: hidden;
     }
 
     html, body {
       margin: 0;
-      min-height: 100%;
     }
 
     body {
       font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic UI", "Yu Gothic", Meiryo, sans-serif;
       color: var(--ink);
+      height: 100%;
       min-height: 100dvh;
+      max-height: 100dvh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
       background-color: var(--cream-mid);
       background-image: linear-gradient(
         168deg,
@@ -47,18 +53,39 @@
     }
 
     .wrap {
+      flex: 1;
+      min-height: 0;
+      width: 100%;
       max-width: 420px;
       margin: 0 auto;
-      padding: calc(1.25rem + var(--safe-top)) 1.25rem calc(2rem + var(--safe-bottom));
+      padding: 0 clamp(0.75rem, 4vw, 1.1rem) calc(0.5rem + var(--safe-bottom));
+      position: relative;
     }
 
-    .brand {
+    .site-title {
+      position: absolute;
+      /* 画面上端と最上段アイコン中心の中間付近に、文字の縦中心を合わせる */
+      top: calc(
+        var(--safe-top) + clamp(1.1rem, (50dvh - var(--top-icon-rise)) / 2, 44dvh)
+      );
+      left: 0;
+      right: 0;
+      z-index: 3;
+      margin: 0;
+      transform: translateY(-50%);
+      padding-bottom: clamp(1rem, 4dvh, 1.75rem);
+      pointer-events: none;
       text-align: center;
-      margin-bottom: 1.75rem;
+      font-size: clamp(1.12rem, 5.4vw, 1.58rem);
+      font-weight: 600;
+      letter-spacing: 0.48em;
+      text-indent: 0.48em;
+      color: rgba(47, 33, 24, 0.78);
+      text-transform: uppercase;
     }
 
-    .brand img,
-    .grid a img {
+    .pentagon-center img,
+    .pentagon a img {
       border-radius: 50%;
       border: 3px solid var(--icon-border);
       box-shadow:
@@ -68,95 +95,141 @@
         0 0 0 1px var(--icon-border-soft);
     }
 
-    .brand img {
+    /* 正五角形の頂点に5アイコン（塊の中心＝PORTALを画面のほぼ中央に） */
+    .pentagon {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      width: min(92vw, 360px);
+      max-width: 100%;
+      max-height: min(92vw, 360px, 82dvh);
+      aspect-ratio: 1;
+      container-type: size;
+      container-name: portal-pentagon;
+    }
+
+    .pentagon-center {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      z-index: 1;
+      width: 35cqmin;
+      max-width: 120px;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .pentagon-center img {
       display: block;
-      width: min(200px, 52vw);
+      width: 100%;
       height: auto;
-      margin: 0 auto;
+      aspect-ratio: 1;
+      object-fit: cover;
     }
 
-    .brand h1 {
-      margin: 1rem 0 0;
-      font-size: 0.78rem;
-      font-weight: 600;
-      letter-spacing: 0.55em;
-      text-indent: 0.55em;
-      color: var(--ink-soft);
-      text-transform: uppercase;
+    .pentagon a:nth-of-type(1) {
+      --i: 0;
     }
 
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem 1.1rem;
+    .pentagon a:nth-of-type(2) {
+      --i: 1;
     }
 
-    .grid a {
+    .pentagon a:nth-of-type(3) {
+      --i: 2;
+    }
+
+    .pentagon a:nth-of-type(4) {
+      --i: 3;
+    }
+
+    .pentagon a:nth-of-type(5) {
+      --i: 4;
+    }
+
+    .pentagon a {
+      --orbit: 38cqmin;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      z-index: 2;
+      width: 28cqmin;
+      max-width: 104px;
+      padding: 0;
+      border-radius: 50%;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
       text-decoration: none;
       color: inherit;
-      padding: 0.35rem 0 0.5rem;
-      border-radius: 1.1rem;
+      transform:
+        translate(-50%, -50%)
+        rotate(calc(var(--i) * 72deg))
+        translateY(calc(-1 * var(--orbit)))
+        rotate(calc(-1 * var(--i) * 72deg));
+      transform-origin: center center;
       transition: transform 0.18s ease, opacity 0.18s ease;
+      touch-action: manipulation;
     }
 
-    .grid a:active {
-      transform: scale(0.96);
-      opacity: 0.92;
+    .pentagon a:active {
+      transform:
+        translate(-50%, -50%)
+        rotate(calc(var(--i) * 72deg))
+        translateY(calc(-1 * var(--orbit)))
+        rotate(calc(-1 * var(--i) * 72deg))
+        scale(0.94);
+      opacity: 0.9;
     }
 
-    .grid a img {
+    .pentagon a img {
       width: 100%;
-      max-width: 148px;
       height: auto;
       display: block;
+      aspect-ratio: 1;
+      object-fit: cover;
     }
 
-    .grid a span {
-      margin-top: 0.55rem;
-      font-size: 0.68rem;
-      font-weight: 600;
-      letter-spacing: 0.12em;
-      color: var(--ink-soft);
+    @supports not (width: 1cqmin) {
+      .pentagon-center {
+        width: min(32vw, 15.5dvh, 112px);
+      }
+
+      .pentagon a {
+        --orbit: min(35vw, 17dvh, 132px);
+        width: min(26vw, 12.8dvh, 96px);
+      }
     }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <header class="brand">
-      <img src="images/PORTAL.jpg" alt="PORTAL" width="400" height="400">
-      <h1>Portal</h1>
-    </header>
-
-    <nav class="grid" aria-label="メインメニュー">
-      <a href="knowhow/">
+    <h1 class="site-title">PORTAL</h1>
+    <nav class="pentagon" aria-label="メインメニュー">
+      <div class="pentagon-center">
+        <img src="images/PORTAL.jpg" alt="PORTAL" width="400" height="400">
+      </div>
+      <a href="knowhow/" aria-label="ノウハウ">
         <img src="images/KNOWHOW.jpg" alt="" width="400" height="400">
-        <span>ノウハウ</span>
       </a>
-      <a href="goods/">
+      <a href="goods/" aria-label="グッズ">
         <img src="images/GOODS.jpg" alt="" width="400" height="400">
-        <span>グッズ</span>
       </a>
-      <a href="cache/">
+      <a href="cache/" aria-label="お金">
         <img src="images/MONEY.jpg" alt="" width="400" height="400">
-        <span>お金</span>
       </a>
-      <a href="schedule/">
+      <a href="schedule/" aria-label="スケジュール">
         <img src="images/SCHEDULE.jpg" alt="" width="400" height="400">
-        <span>スケジュール</span>
       </a>
-      <a href="recipe/">
+      <a href="recipe/" aria-label="レシピ">
         <img src="images/RECIPE.png" alt="" width="400" height="400">
-        <span>レシピ</span>
       </a>
     </nav>
   </div>
   <script>
     (function () {
-      var nav = document.querySelector("nav.grid");
+      var nav = document.querySelector("nav.pentagon");
       if (!nav) return;
 
       nav.addEventListener("click", function (e) {
